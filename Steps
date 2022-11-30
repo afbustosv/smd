@@ -1,0 +1,12 @@
+Set up
+
++ py -m venv venv
++ pip install django
++ django-admin startproject smd .
+
+Run
++ py manage.py runserver
++ py manage.py startapp
+
+
++ python manage.py migrate

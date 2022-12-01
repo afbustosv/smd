@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
     path('members/', views.members, name='members'),
+    path('profile/<int:id>/', views.profile, name='profile'),
     path('logout/', views.signout, name='signout'),
     path('signin/', views.signin, name='signin'),
     path('register/', views.register, name='register'),

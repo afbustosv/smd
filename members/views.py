@@ -62,6 +62,11 @@ def members(request):
         'members' : members
     })
 
+def profile(request, id):
+    member = Member.objects.get(pk=id)
+    return render(request, 'profile.html',{
+        'member': member
+    })
 
 def signout(request):
     logout(request)

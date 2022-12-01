@@ -10,12 +10,16 @@
                 {% for member in members %}
                 <li class="list-group-item">
                         <div class=" d-flex justify-content-between">
-                            <strong>
-                                {% if member.tag %}
+                            {% if member.tag %}
+                            <strong class="text-danger">       
                                 SmD Æ
-                                {% endif %}
                                 {{member.nick}}
                             </strong>
+                            {% else %}
+                            <strong>
+                                {{member.nick}}
+                            </strong>
+                            {% endif %}
                             <p>{{member.liga}}</p>
                         </div>                   
                     <p class="text-secondary">{{member.frase}}</p>            

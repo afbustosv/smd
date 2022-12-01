@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="text-center">
+                Torneos
+            </h1>
+            {% for tournament in tournaments %}
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <strong>
+                            {{tournament.nombre}}
+                        </strong>
+                    </div>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+    
+    
+{% endblock%}

@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from members import views
+from tournament import views as tviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,7 @@ urlpatterns = [
     path('members/', views.members, name='members'),
     path('logout/', views.signout, name='signout'),
     path('signin/', views.signin, name='signin'),
-    path('register/', views.register, name='register')
+    path('register/', views.register, name='register'),
+    path('tournaments/', tviews.tournaments, name='tournaments' ),
+    path('tournaments/<int:id>/', tviews.tournament, name='tournament')
 ]

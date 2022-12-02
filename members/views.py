@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from django.template.defaulttags import register
 from .forms import RegisterForm
 from .models import Member
 
@@ -91,4 +92,3 @@ def register(request):
             'error': 'Suministre datos válidos'
             })
 
-    

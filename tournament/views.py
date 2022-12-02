@@ -27,3 +27,11 @@ def module(value):
 @register.filter
 def half(value):
     return value//2
+
+@register.filter  
+def mayus(value):
+    return value.capitalize()
+
+@register.filter
+def fecha(value):
+    return str(value.day) +'/'+ str(value.month) +'/'+ str(value.year)[2:]

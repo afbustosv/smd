@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,49 +7,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmD | International</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css\style.css' %}">
 </head>
-<body>
+<body background="{% static 'img\background.svg' %}" >
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container">
           <a class="navbar-brand" href="/">SmD | International</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/members/">Miembros</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/tournaments/">Torneos</a>
-              </li>
-              
-              
-              
-              {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="#">Misiones</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout/">Salir</a>
-              </li> 
-              {% else %} 
-              <li class="nav-item">
-                <a class="nav-link" href="/signin/">Ingresar</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/signup/">Registrarse</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/members/">Miembros</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/tournaments/">Torneos</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link disabled" >Misiones</a>
+                </li>
+                {% else %} 
+                <li class="nav-item">
+                  <a class="nav-link" href="/signin/">Ingresar</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/signup/">Registrarse</a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-end bg-dark navbar-dark navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'profile' user.id %}">{{user.username|mayus}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout/">Salir</a>
+            </li> 
+            {% endif %}
         </div>
       </nav>
-    {% block content %} 
-    {% endblock%}
+      
+    <main class="container mt-5">
+      {% block content %} 
+      {% endblock%}
+    </main>
+    
 
 </body>
 </html>

@@ -9,13 +9,13 @@
             </h1>
             {% for tournament in tournaments %}
             <ul class="list-group">
-                <li class="list-group-item">
+                <a class="list-group-item" href="{% url 'tournament' tournament.id %}">
                     <div class="d-flex justify-content-between">
                         <strong>
                             {{tournament.nombre}}
                         </strong>
                     </div>
-                </li>
+                </a>
             </ul>
             {% endfor %}
         </div>

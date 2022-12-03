@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.template.defaulttags import register
 from .forms import RegisterForm
-from .models import Member
+import datetime 
+from .models import Member, User
 
 # Create your views here.
 
@@ -54,20 +55,27 @@ def signin(request):
             })
         else:
             login(request, user)
+            member = Member.objects.get(user = request.user)
+            if member:
+                member.last_login = datetime.date.today()
+                member.ip = request.META.get('REMOTE_ADDR')
+                member.save()
             return redirect('home')
 
 
 def members(request):
-    members = Member.objects.all()
+    members = Member.objects.all().order_by('-puntos')
     return render(request, 'members.html', {
-        'members' : members
+        'members': members
     })
+
 
 def profile(request, id):
     member = Member.objects.get(pk=id)
-    return render(request, 'profile.html',{
+    return render(request, 'profile.html', {
         'member': member
     })
+
 
 def signout(request):
     logout(request)
@@ -85,10 +93,13 @@ def register(request):
             new_player = form.save(commit=False)
             new_player.user = request.user
             new_player.save()
+            user = User.objects.get(username = request.user)
+            print(user)
+            user.miembro = True
+            user.save()
             return redirect('members')
         except ValueError:
             return render(request, 'register.html', {
-            'form': RegisterForm,
-            'error': 'Suministre datos válidos'
+                'form': RegisterForm,
+                'error': 'Suministre datos válidos'
             })
-

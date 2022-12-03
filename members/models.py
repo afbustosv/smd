@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django import forms
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-
 
 class Country(models.Model):
     pais = models.CharField(max_length=20)
@@ -13,13 +13,14 @@ class Country(models.Model):
     def __str__(self):
         return self.pais
 
+class User(AbstractUser):
+    miembro = models.BooleanField(default=False)
 
 class League(models.Model):
     liga = models.CharField(max_length=20)
 
     def __str__(self):
         return self.liga
-
 
 class Member(models.Model):
     nick = models.CharField(max_length=12)
@@ -33,7 +34,9 @@ class Member(models.Model):
     last_login = models.DateTimeField(null=True)
     puntos = models.IntegerField(default=0)
     activo = models.BooleanField(default=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    refer = models.ForeignKey("Member", on_delete = models.CASCADE, blank=True, null=True)
+    ip = models.GenericIPAddressField(null = True)
 
     def __str__(self):
         return self.nick

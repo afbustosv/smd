@@ -1,5 +1,35 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %} 
-    {{member.nick}}
+    <div class="col-md-6 offset-md-3">
+        <div class="card card-body">
+            <div class=" d-flex justify-content-between">
+                <div class="d-flex fw-bold">
+                    {% if member.tag %}
+                        <p class="text-danger">
+                            SmD Æ&nbsp;
+                        </p>
+                    {% endif %}
+                    <p>
+                        {{member.nick}} # {{member.serial}}
+                    </p> 
+                </div> 
+                <div class="justify-content-between">
+                    <p>
+                        {{member.liga}}
+                    </p>
+                </div>     
+            </div>
+            <div class="d-flex justify-content-between">
+                <img src="{% static 'img\profile_default.svg' %}" class="card-img-top img-thumbnail" alt="profile photo"> 
+                <div>
+                    <ul>
+                        <li>a</li>
+                    </ul>
+                </div> 
+            </div> 
+            
+        </div>    
+    </div>  
 {% endblock %}

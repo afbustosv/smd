@@ -3,6 +3,8 @@
 
 {% block content %} 
     <div class="col-md-5 offset-md-3 container-fluid"  >
+
+        <!-- Tarjeta principal -->
         <div class="card card-body border border-light border-3" style="background-color: #1a1a1a;">
 
             <!-- nombre y liga -->
@@ -56,11 +58,28 @@
                           </div>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">Reclutados</div>
+                            {{member.num_ref}}
+                          </div>
+                        </li>
+                        {% if member.refer != None %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto fw-bold">
                               <div class="fw-bold">Reclutado por</div>
-                              {{member.refer}}
+                              <a href="{% url 'profile' ref.id %}" class="fw-bold d-flex text-decoration-none">
+                                {% if ref.tag %}
+                                  <p class="text-danger">
+                                      SmD Æ&nbsp;
+                                  </p>
+                                {% endif %}
+                                  <p class="text-primary text-dark" >
+                                      {{ref.nick}} 
+                                  </p>
+                                </a>
                             </div>
                           </li>
+                          {% endif %}
                     </ul>
                 </div>  
             </div>
@@ -87,16 +106,28 @@
                   </div>
                 <ul class="list-group">
                     {% for comment in comments %}
-                      <li class="list-group-item">
-                        <p>
-                          {{comment.by}}
-                        </p>
-                        <p>
+                      <li class="list-group-item mb-2 rounded">
+                        <div class="d-flex justify-content-between">
+                          <a class="d-flex fw-bold text-decoration-none" href="{% url 'profile' comment.by.id %}">
+                            {% if comment.by.tag %}
+                                <p class="text-danger">
+                                    SmD Æ&nbsp;
+                                </p>
+                            {% endif %}
+                            <p class="fw-bold text-dark">
+                              {{comment.by}}
+                            </p> 
+                          </a>
+                          
+                          <p>
+                            {{comment.date|fecha}}
+                          </p>
+                        </div>
+                        
+                        <p class="text-end">
                           {{comment.description}}
                         </p>
-                        <p>
-                          {{comment.date|fecha}}
-                        </p>
+                        
                       </li>
                     {% endfor %}
                   </ul>
@@ -104,15 +135,27 @@
 
 
         </div>  
+
+        <!-- Formulario comentario -->
         <div>
-          <form method="POST">
-            {% csrf_token %}
-            {{form}}
-            <button>
-              Comentar
-            </button>
-          </form>
-          
+          {% if form == None %}
+          <div class="alert alert-warning mt-2" role="alert">
+            Solo puedes escribir un comentario
+          </div>
+      
+
+          {% else %}
+
+            <form method="POST">
+              {% csrf_token %}
+              {{form}}
+              <button>
+                Comentar
+              </button>
+            </form>
+
+          {% endif %}
+
         </div>  
     </div>  
 {% endblock %}

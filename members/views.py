@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from django.db.models import Subquery
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import RegisterForm, CommentForm
 import datetime 
@@ -75,14 +76,32 @@ def members(request):
 
 def profile(request, id):
     member = Member.objects.get(pk=id)
-    comments = Comment.objects.filter(user = member)
+    comments = Comment.objects.filter(user = member).select_related('by')
     author = Member.objects.get(user = request.user)
+    comment_author = comments.filter(by = author)
+
+    try:
+        ref = Member.objects.get(nick = member.refer)
+    except:
+        ref = None
+    
+    
+    # Get-post
     if request.method == 'GET':
-        return render(request, 'profile.html', {
-            'member': member,
-            'comments': comments,
-            'form': CommentForm,
-        })
+        if comment_author:
+            return render(request, 'profile.html', {
+                'member': member,
+                'comments': comments,
+                'form': None,
+                'ref': ref
+            })
+        else:
+            return render(request, 'profile.html', {
+                'member': member,
+                'comments': comments,
+                'form': CommentForm,
+                'ref': ref
+            })
     else:
         try:
             form = CommentForm(request.POST)
@@ -90,18 +109,35 @@ def profile(request, id):
             new_comment.user = member
             new_comment.by = author
             new_comment.save()
-            return render(request, 'profile.html', {
-            'member': member,
-            'comments': comments,
-            'form': CommentForm,
-            })
+            if comment_author:
+                return render(request, 'profile.html', {
+                    'member': member,
+                    'comments': comments,
+                    'form': None,
+                    'ref': ref
+                })
+            else:
+                return render(request, 'profile.html', {
+                    'member': member,
+                    'comments': comments,
+                    'form': CommentForm,
+                    'ref': ref
+                })
         except:
-            return render(request, 'profile.html', {
-            'member': member,
-            'comments': comments,
-            'form': CommentForm,
-            'error': 'informacion invalida'
-        })
+            if comment_author:
+                return render(request, 'profile.html', {
+                    'member': member,
+                    'comments': comments,
+                    'form': None,
+                    'ref': ref
+                })
+            else:
+                return render(request, 'profile.html', {
+                    'member': member,
+                    'comments': comments,
+                    'form': CommentForm,
+                    'ref': ref
+                })
 
 def signout(request):
     logout(request)

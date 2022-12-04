@@ -4,6 +4,8 @@
 {% block content %} 
     <div class="col-md-5 offset-md-3 container-fluid"  >
         <div class="card card-body border border-light border-3" style="background-color: #1a1a1a;">
+
+            <!-- nombre y liga -->
             <div class=" d-flex justify-content-between">
                 <div class="d-flex fw-bold">
                     {% if member.tag %}
@@ -21,6 +23,8 @@
                     </p>
                 </div>     
             </div>
+
+            <!-- imagen y descripción -->
             <div class="d-flex justify-content-evenly">
                 <div class="d-inblock">
                     <img src="{% static 'img\profile_default.svg' %}" class="card-img-top img-thumbnail" style="max-height: 300px;" alt="profile photo">
@@ -61,14 +65,11 @@
                 </div>  
             </div>
 
-
+            <!-- Participaciones -->
             <div>
                 <div class="h4 pb-2 mb-4 text-light border-bottom border-danger text-center">
                     Participaciones
-                  </div>
-            </div>
-
-            <div>
+                </div>
                 <ul class="list-group">
                     <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
                     <li class="list-group-item">A second item</li>
@@ -78,23 +79,40 @@
                   </ul>
             </div>
 
+
+            <!-- Comentarios -->
             <div>
                 <div class="h4 pb-2 mb-4 text-light border-bottom border-danger text-center">
                     Comentarios
                   </div>
-            </div>
-
-            <div>
                 <ul class="list-group">
-                    <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
-                    <li class="list-group-item">A fourth item</li>
-                    <li class="list-group-item">And a fifth one</li>
+                    {% for comment in comments %}
+                      <li class="list-group-item">
+                        <p>
+                          {{comment.by}}
+                        </p>
+                        <p>
+                          {{comment.description}}
+                        </p>
+                        <p>
+                          {{comment.date|fecha}}
+                        </p>
+                      </li>
+                    {% endfor %}
                   </ul>
             </div>
 
 
-        </div>    
+        </div>  
+        <div>
+          <form method="POST">
+            {% csrf_token %}
+            {{form}}
+            <button>
+              Comentar
+            </button>
+          </form>
+          
+        </div>  
     </div>  
 {% endblock %}

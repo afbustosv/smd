@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -14,7 +13,8 @@ class Country(models.Model):
         return self.pais
 
 class User(AbstractUser):
-    miembro = models.BooleanField(default=False)
+    member = models.OneToOneField('Member', on_delete= models.CASCADE, blank=True, null=True, related_name='user_member' )
+    registro = models.BooleanField(default=False)
 
 class League(models.Model):
     liga = models.CharField(max_length=20)
@@ -34,9 +34,19 @@ class Member(models.Model):
     last_login = models.DateTimeField(null=True)
     puntos = models.IntegerField(default=0)
     activo = models.BooleanField(default=False)
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
-    refer = models.ForeignKey("Member", on_delete = models.CASCADE, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete = models.DO_NOTHING, related_name='member_user')
+    refer = models.ForeignKey("Member", on_delete = models.DO_NOTHING, blank=True, null=True)
+    num_ref =models.SmallIntegerField(default=0)
     ip = models.GenericIPAddressField(null = True)
 
     def __str__(self):
         return self.nick
+
+class Comment(models.Model):
+    user = models.ForeignKey(Member, on_delete= models.CASCADE, related_name='usuario')
+    description = models.CharField(max_length=150)
+    date = models.DateTimeField(auto_now_add=True)
+    by = models.ForeignKey(Member, on_delete= models.CASCADE, related_name='by')
+
+    def __str__(self) :
+        return ('Para ' + str(self.user) + '  de  ' + str(self.by))

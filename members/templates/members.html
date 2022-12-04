@@ -4,26 +4,41 @@
 {% block content %}
     <div class="row">
         {% for member in members%}
-        <a class="card m-2 text-decoration-none" href="{% url 'profile' member.id %}" style="width: 18rem;">
-            <div class="card-body">
-                <div class="d-flex justify-content-between ">
-                    <p># {{forloop.counter}}</p>
-                    <p>{{member.liga}}</p>
+        <a class="card card-body m-2 text-decoration-none border border-light border-3 p-0 "  href="{% url 'profile' member.id %}" style="width: 18rem;">
+            <div class="rounded p-3" style="background-color: #1a1a1a;">
+                <!-- numero -->
+                <div class="d-flex justify-content-start ">
+                    <p class="text-danger fw-bolder mb-1"># {{forloop.counter}}</p>
                 </div>
-                <div  class=" d-flex justify-content-start fw-bold ">
-                    {% if member.tag %}      
+
+                <!-- nombre y liga -->
+                <div  class=" d-flex justify-content-between fw-bold ">
+                    <div class="d-flex">
+                        {% if member.tag %}      
                        <p class="text-danger">
                         SmD Æ&nbsp;
                        </p>
-                    {% endif %}
-                    <p class="text-dark">
-                        {{member.nick}}
-                    </p>
+                        {% endif %}
+                        <p class="text-light ">
+                            {{member.nick}}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-light">
+                            {{member.liga}}
+                        </p>
+                    </div>
                 </div>
-              <img src="{% static 'img\profile_default.svg' %}" class="card-img-top" alt="profile photo">
-              <p class="text-secondary fst-italic">{{member.frase}}</p>  
-              <p>Puntos : {{member.puntos}}</p>
-              <p>Ultima conexión: {{member.created|fecha}}</p>
+
+                <div>
+                    <img src="{% static 'img\profile_default.svg' %}" class="card-img-top" alt="profile photo">
+                    <p class="text-light fst-italic text-center">	   	
+                        &#8220; {{member.frase}} &#8221;
+                    </p>  
+                    <p class="text-light">Puntos : {{member.puntos}}</p>
+                    <p class="text-light">Ultima conexión: {{member.created|fecha}}</p>
+                </div>
+              
             </div>
         </a>
         {% endfor %}

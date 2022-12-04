@@ -34,4 +34,7 @@ def mayus(value):
 
 @register.filter
 def fecha(value):
-    return str(value.day) +'/'+ str(value.month) +'/'+ str(value.year)[2:]
+    if value == None:
+        return "--/--/--"
+    else:
+        return str(value.day) +'/'+ str(value.month) +'/'+ str(value.year)[2:]

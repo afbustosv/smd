@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.urls import reverse
 # from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from django.db.models import Subquery
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import RegisterForm, CommentForm
-import datetime 
+import datetime
 from .models import Member, User, Comment
 
 # Create your views here.
@@ -56,14 +56,14 @@ def signin(request):
         else:
             login(request, user)
             try:
-                member = Member.objects.get(user = request.user)
+                member = Member.objects.get(user=request.user)
                 if member:
                     member.last_login = datetime.date.today()
                     member.ip = request.META.get('REMOTE_ADDR')
                     member.save()
             except ObjectDoesNotExist:
                 pass
-            
+
             return redirect('home')
 
 
@@ -76,23 +76,35 @@ def members(request):
 
 def profile(request, id):
     member = Member.objects.get(pk=id)
-    comments = Comment.objects.filter(user = member).select_related('by')
-    author = Member.objects.get(user = request.user)
-    comment_author = comments.filter(by = author)
+    comments = Comment.objects.filter(user=member).select_related('by')
 
     try:
-        ref = Member.objects.get(nick = member.refer)
+        author = Member.objects.get(user=request.user.id)
+        comment_author = comments.filter(by=author)
+    except:
+        author = False
+        comment_author = False
+    try:
+        ref = Member.objects.get(nick=member.refer)
     except:
         ref = None
-    
-    
+
     # Get-post
     if request.method == 'GET':
         if comment_author:
             return render(request, 'profile.html', {
                 'member': member,
                 'comments': comments,
-                'form': None,
+                'message': 'Solo puedes escribir un comentario',
+                'author': author,
+                'ref': ref
+            })
+        elif comment_author == None:
+            return render(request, 'profile.html', {
+                'member': member,
+                'comments': comments,
+                'message': 'Ingresa para poder comentar',
+                'author': author,
                 'ref': ref
             })
         else:
@@ -100,20 +112,25 @@ def profile(request, id):
                 'member': member,
                 'comments': comments,
                 'form': CommentForm,
-                'ref': ref
+                'ref': ref,
+                'author': author
             })
     else:
+        print(request.POST)
         try:
-            form = CommentForm(request.POST)
+            form = CommentForm()
             new_comment = form.save(commit=False)
+            new_comment.description = request.POST['description']
             new_comment.user = member
             new_comment.by = author
             new_comment.save()
+
             if comment_author:
                 return render(request, 'profile.html', {
                     'member': member,
                     'comments': comments,
-                    'form': None,
+                    'message': 'Solo puedes escribir un comentario',
+                    'author': author,
                     'ref': ref
                 })
             else:
@@ -121,14 +138,16 @@ def profile(request, id):
                     'member': member,
                     'comments': comments,
                     'form': CommentForm,
-                    'ref': ref
+                    'ref': ref,
+                    'author': 'invitado'
                 })
         except:
+            print('here')
             if comment_author:
                 return render(request, 'profile.html', {
                     'member': member,
                     'comments': comments,
-                    'form': None,
+                    'message': 'Solo puedes escribir un comentario',
                     'ref': ref
                 })
             else:
@@ -136,8 +155,17 @@ def profile(request, id):
                     'member': member,
                     'comments': comments,
                     'form': CommentForm,
-                    'ref': ref
+                    'ref': ref,
+                    'author': author
                 })
+
+
+def delete_comment(request, id, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id, by=request.user.member)
+    if request.method == 'POST':
+        comment.delete()
+        return redirect(reverse('profile', kwargs={'id': id}))
+
 
 def signout(request):
     logout(request)
@@ -155,11 +183,11 @@ def register(request):
             new_player = form.save(commit=False)
             new_player.user = request.user
             new_player.save()
-            user = User.objects.get(username = request.user)
+            user = User.objects.get(username=request.user)
             user.member = new_player
             user.registro = True
             user.save()
-            ref = Member.objects.get(pk = request.POST['refer'])
+            ref = Member.objects.get(pk=request.POST['refer'])
             if ref:
                 ref.puntos += 100
                 ref.num_ref += 1

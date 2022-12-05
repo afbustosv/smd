@@ -119,14 +119,36 @@
                             </p> 
                           </a>
                           
-                          <p>
+                          {% if author == comment.by %}
+                          <div class="d-flex ">
+                            <form action="{% url 'delete_comment' id=member.id comment_id=comment.id %}" method="POST">
+                              {% csrf_token %}
+                              <button class="p-0 mr-1" style="border: None ;">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                              </button>
+                            </form>
+
+                            
+                            <form action="{% url 'delete_comment' id=member.id comment_id=comment.id %}" method="POST">
+                              
+                              {% csrf_token %}
+                              <button class="p-0" style="border: None ;">
+                                <i class="fa-regular fa-trash-can"></i>
+                              </button>
+                            </form>
+                          </div>
+                          {% endif %}
+                        </div>
+                        
+                        <div class=" d-flex justify-content-between">
+                          <p class="text-start offset-md-1 border-bottom border-dark">
+                            {{comment.description}}
+                          </p>
+                          <p >
                             {{comment.date|fecha}}
                           </p>
                         </div>
                         
-                        <p class="text-end">
-                          {{comment.description}}
-                        </p>
                         
                       </li>
                     {% endfor %}
@@ -138,21 +160,58 @@
 
         <!-- Formulario comentario -->
         <div>
-          {% if form == None %}
-          <div class="alert alert-warning mt-2" role="alert">
-            Solo puedes escribir un comentario
-          </div>
-      
+          {% if message == 'Ingresa para poder comentar' %}
+          <a href="/signin/" class="text-decoration-none">
+            <div  class="alert alert-warning mt-2" role="alert">
+              {{message}}
+            </div>
+          </a>
+          {% else%}
+            {% if message %}
+            <div  class="alert alert-warning mt-2" role="alert">
+              {{message}}
+            </div>
+            {% endif %}
+          {% endif %}
+          {% if form %}
+            <div class="col-md-12">
+              <div class="card card-body border border-light border-3 mt-2" style="background-color: #1a1a1a;">
 
-          {% else %}
+                <form method="POST">
+                  {% csrf_token %}
+                  <div class="container">
+                    
+                    <div class="d-flex fw-bold">
+                      <div>
+                        {% if author.tag %}
+                          <p class="text-danger">SmD Æ&nbsp;</p>
+                        {% endif %}
+                      </div>
+                      <p class="text-light">
+                        {{author.nick}}
+                      </p>
+                    </div>
 
-            <form method="POST">
-              {% csrf_token %}
-              {{form}}
-              <button>
-                Comentar
-              </button>
-            </form>
+                    <div class="input-group mb-3">
+                      <span class="input-group-text"><i class="fa-regular fa-comments"></i></span>
+                      <div class="form-floating">
+                        {{form.description}}
+                        <label for="floatingInputGroup1">Escribe un comentario</label>
+                      </div>
+                    </div>
+
+                    <div class="row justify-content-end">
+                      <button class="btn btn-danger mt-2">
+                        Comentar
+                      </button>
+                    </div> 
+
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+            
 
           {% endif %}
 

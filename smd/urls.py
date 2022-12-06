@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from members import views
 from tournament import views as tviews
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,3 +33,8 @@ urlpatterns = [
     path('tournaments/', tviews.tournaments, name='tournaments' ),
     path('tournaments/<int:id>/', tviews.tournament, name='tournament')
 ]
+
+
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL,
+                              document_root=settings.MEDIA_ROOT)

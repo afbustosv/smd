@@ -1,6 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from .models import *
+
+class UserAdmin(admin.ModelAdmin):
+    readonly_fields = ('member', 'registro')
+    
 
 class MemberAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'ip' )

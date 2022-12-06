@@ -5,19 +5,21 @@ from django.contrib.auth.models import AbstractUser
 
 class Country(models.Model):
     pais = models.CharField(max_length=20)
+    flag = models.ImageField(upload_to='media/flags/', default=None)
     code = models.CharField(max_length=3, default=None)
     zona = models.CharField(max_length=30)
-    indice = models.CharField(max_length=6)
+    indice = models.CharField(max_length=6)    
 
     def __str__(self):
         return self.pais
 
 class User(AbstractUser):
-    member = models.OneToOneField('Member', on_delete= models.CASCADE, blank=True, null=True, related_name='user_member' )
-    registro = models.BooleanField(default=False)
+    member = models.OneToOneField('Member', on_delete= models.CASCADE, blank=True, null=True, related_name='user_member', editable=True, unique=True )
+    registro = models.BooleanField(default=False, editable=True)
 
 class League(models.Model):
     liga = models.CharField(max_length=20)
+    icon = models.ImageField(upload_to='media/ranks/', default=None)
 
     def __str__(self):
         return self.liga

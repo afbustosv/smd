@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Registro de Jugador</h1>
-
+    {{error}}
     <form action="/register/" method="POST">
         {% csrf_token %}
         {{form.as_p}}

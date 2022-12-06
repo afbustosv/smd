@@ -4,8 +4,8 @@
 {% block content %}
     <div class="row">
         {% for member in members%}
-        <a class="card card-body m-2 text-decoration-none border border-light border-3 p-0 "  href="{% url 'profile' member.id %}" style="width: 18rem;">
-            <div class="rounded p-3" style="background-color: #1a1a1a;">
+        <a class="card card-body m-2 text-decoration-none border border-light border-3 p-0 "  href="{% url 'profile' member.id %}" style="max-width: 300px;">
+            <div class="rounded p-3 col" style="background-color: #1a1a1a;">
                 <!-- numero -->
                 <div class="d-flex justify-content-start ">
                     <p class="text-danger fw-bolder mb-1"># {{forloop.counter}}</p>
@@ -31,10 +31,13 @@
                 </div>
 
                 <div>
-                    <img src="{% static 'img\profile_default.svg' %}" class="card-img-top" alt="profile photo">
+                    <img src="{% static 'img\profile_default.svg' %}" class="card-img-top" alt="profile photo" >
                     <p class="text-light fst-italic text-center">	   	
                         &#8220; {{member.frase}} &#8221;
                     </p>  
+                </div>
+
+                <div class="align-items-end">
                     <p class="text-light">Puntos : {{member.puntos}}</p>
                     <p class="text-light">Ultima conexión: {{member.created|fecha}}</p>
                 </div>
